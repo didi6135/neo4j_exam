@@ -12,7 +12,6 @@ def get_interaction():
         response = process_record(data)
         if "error" in response:
             return jsonify(response), 400
-
         return jsonify({"message": "Interaction processed successfully"}), 200
     except Exception as e:
         error_message = str(e)
