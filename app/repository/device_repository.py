@@ -3,6 +3,10 @@ from app.db.neo4j_db import driver
 
 
 
+
+
+
+
 def create_device(device):
     with driver.session() as session:
         device_dict = asdict(device)
@@ -99,7 +103,7 @@ def check_direct_connection(device_id_1, device_id_2):
     try:
         with driver.session() as session:
             query = """
-            MATCH (a:Device {id: $device_id_1})-[r:INTERACTED]->(b:Device {id: $device_id_2})
+            MATCH (a:Device {id: $device_id_1})-[r:CONNECTED]->(b:Device {id: $device_id_2})
             RETURN COUNT(r) > 0 AS is_connected
             """
             params = {"device_id_1": device_id_1, "device_id_2": device_id_2}
@@ -114,7 +118,7 @@ def check_direct_connection(device_id_1, device_id_2):
 
 def fetch_most_recent_interaction(device_id):
     query = """
-    MATCH (a:Device {id: $device_id})-[r:INTERACTED]->(b:Device)
+    MATCH (a:Device {id: $device_id})-[r:CONNECTED]->(b:Device)
     RETURN b.id AS connected_device_id, b.name AS connected_device_name, 
            r.method AS method, r.timestamp AS timestamp
     ORDER BY r.timestamp DESC
