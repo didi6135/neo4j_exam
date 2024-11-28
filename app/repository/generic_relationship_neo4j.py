@@ -15,29 +15,31 @@ def create_relationship(
 ):
     with driver.session() as session:
         query = f"""
-            merge (a:{start_entity} {{{start_identifier_key}: $start_identifier_value}})
-            on create set += $start_properties
-            merge (b:{end_entity} {{{end_identifier_key}: $end_identifier_value}})
-            on create set += $end_properties
-            create (a)-[r:$relationship]->(b)
-            return type(r) AS relationship, properties(r) AS rel_properties
-            """
-
+        MERGE (a:{start_entity} {{{start_identifier_key}: $start_identifier_value}})
+        ON CREATE SET a += $start_properties
+        MERGE (b:{end_entity} {{{end_identifier_key}: $end_identifier_value}})
+        ON CREATE SET b += $end_properties
+        MERGE (a)-[r:{relationship}]->(b)
+        SET r += $rel_properties
+        RETURN type(r) AS relationship, properties(r) AS rel_properties
+        """
         params = {
             'start_identifier_value': start_identifier_value,
             'end_identifier_value': end_identifier_value,
-            'relationship': relationship,
             'start_properties': start_properties or {},
             'end_properties': end_properties or {},
-            'rel_properties': rel_properties
+            'rel_properties': rel_properties or {}
         }
 
-        res = session.run(query, params).single()
-        return {
-            'relationship': res['relationship'],
-            'rel_properties': res['rel_properties']
-        } if res else None
-
+        try:
+            res = session.run(query, params).single()
+            return {
+                'relationship': res['relationship'],
+                'rel_properties': res['rel_properties']
+            } if res else None
+        except Exception as e:
+            print(f"Error creating relationship: {str(e)}")
+            return {"error": "Database Error", "details": str(e)}
 
 
 

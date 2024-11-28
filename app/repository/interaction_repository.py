@@ -3,7 +3,7 @@ from app.repository.generic_relationship_neo4j import create_relationship
 
 
 def create_interaction(interaction):
-    create_relationship(
+    res = create_relationship(
         start_entity="Device",
         start_identifier_key="id",
         start_identifier_value=interaction["from_device"],
@@ -13,3 +13,4 @@ def create_interaction(interaction):
         relationship="CONNECTED",
         rel_properties=Interaction(**interaction).__dict__
     )
+    print(res)

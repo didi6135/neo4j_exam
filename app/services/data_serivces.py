@@ -7,5 +7,10 @@ def process_data(data):
 
 
 def process_record(record):
-    process_devices(record["devices"])
-    process_interaction(record["interaction"])
+    # Process devices
+    devices = record["devices"]
+    process_devices(devices)
+
+    # Process interaction
+    interaction = record["interaction"]
+    process_interaction(interaction)
