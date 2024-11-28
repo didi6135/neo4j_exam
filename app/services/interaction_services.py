@@ -4,8 +4,6 @@ from app.repository.interaction_repository import create_interaction
 def process_interaction(interaction):
     if not is_valid_interaction(interaction):
         return
-
-    # print(f"Processing interaction: {interaction}")
     create_interaction(interaction)
 
 

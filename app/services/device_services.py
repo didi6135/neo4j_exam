@@ -6,6 +6,7 @@ from app.services.location_services import process_location
 def process_devices(devices):
     list(map(process_device, devices))
 
+
 def process_device(device_data):
     device = Device(
         id=device_data["id"],
@@ -15,8 +16,7 @@ def process_device(device_data):
         os=device_data["os"],
         location=process_location(device_data["location"]),
     )
-    res = create_device(device)
-    print(res)
+    return create_device(device)
 
 
 
